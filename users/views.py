@@ -7,7 +7,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .forms import TopUpForm, UserRegistrationForm, EmailAuthenticationForm
+from .forms import TopUpForm, UserRegistrationForm, EmailAuthenticationForm, ProfileEditForm
 from .models import Transaction
 
 RECAPTCHA_VERIFY_URL = "https://www.google.com/recaptcha/api/siteverify"
@@ -105,3 +105,21 @@ def top_up_balance(request):
     else:
         form = TopUpForm()
     return render(request, 'users/top_up_balance.html', {'form': form})
+
+@login_required
+def profile_view(request):
+    profile = request.user.profile
+    return render(request, 'users/profile.html', {'profile': profile})
+
+@login_required
+def edit_profile(request):
+    profile = request.user.profile
+    if request.method == "POST":
+        form = ProfileEditForm(request.POST, instance=profile, user=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Your profile has been updated successfully.")
+            return redirect('users:profile')
+    else:
+        form = ProfileEditForm(instance=profile, user=request.user)
+    return render(request, 'users/edit_profile.html', {'form': form})

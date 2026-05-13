@@ -1,13 +1,13 @@
 from django.contrib import admin
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .models import Profile
+from .models import Profile, Game
 
 class ProfileInline(admin.StackedInline):
     model = Profile
     can_delete = False
     fk_name = 'user'
-    fields = ('nickname',)
+    fields = ('nickname', 'bio', 'favourite_game_1', 'favourite_game_2', 'favourite_game_3', 'favourite_game_4')
     extra = 0
 
 class UserAdmin(BaseUserAdmin):
@@ -25,3 +25,8 @@ class ProfileAdmin(admin.ModelAdmin):
     def user_first_name(self, obj): return obj.user.first_name
     def user_last_name(self, obj): return obj.user.last_name
     def user_email(self, obj): return obj.user.email
+
+@admin.register(Game)
+class GameAdmin(admin.ModelAdmin):
+    list_display = ("title", "created_at")
+    search_fields = ("title",)

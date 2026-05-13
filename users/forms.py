@@ -59,3 +59,47 @@ class TopUpForm(forms.Form):
             'min_value': "Please enter an amount greater than $0.00.",
             'invalid': "Enter a valid amount in dollars and cents."}
             )
+
+class ProfileEditForm(forms.ModelForm):
+    first_name = forms.CharField(max_length=30, required=True)
+    last_name = forms.CharField(max_length=30, required=True)
+    email = forms.EmailField(required=True)
+
+    class Meta:
+        model = Profile
+        fields = ['nickname', 'bio', 'max_spend']
+
+    def __init__(self, *args, user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user = user
+        if user:
+            self.fields['first_name'].initial = user.first_name
+            self.fields['last_name'].initial = user.last_name
+            self.fields['email'].initial = user.email
+
+    def clean_email(self):
+        email = self.cleaned_data['email'].strip().lower()
+        if self.user and User.objects.filter(username__iexact=email).exclude(pk=self.user.pk).exists():
+            raise forms.ValidationError("This email is already in use.")
+        return email
+
+    def clean_nickname(self):
+        nickname = self.cleaned_data.get("nickname", "").strip()
+        if not nickname:
+            raise forms.ValidationError("Nickname is required.")
+        if self.instance and Profile.objects.filter(nickname__iexact=nickname).exclude(pk=self.instance.pk).exists():
+            raise forms.ValidationError("This nickname is already taken.")
+        return nickname
+
+    def save(self, commit=True):
+        profile = super().save(commit=False)
+        if self.user:
+            self.user.first_name = self.cleaned_data['first_name']
+            self.user.last_name = self.cleaned_data['last_name']
+            self.user.email = self.cleaned_data['email'].strip().lower()
+            self.user.username = self.user.email
+            if commit:
+                self.user.save()
+        if commit:
+            profile.save()
+        return profile
