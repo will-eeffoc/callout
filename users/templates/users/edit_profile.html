@@ -56,6 +56,42 @@
             {% endif %}
         </div>
 
+        <div class="games-form-section">
+            <h2>Top 4 Games</h2>
+            
+            <div class="form-group">
+                <label for="{{ form.favourite_game_1.id_for_label }}">Favorite Game 1:</label>
+                {{ form.favourite_game_1 }}
+                {% if form.favourite_game_1.errors %}
+                    <span class="error">{{ form.favourite_game_1.errors.0 }}</span>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.favourite_game_2.id_for_label }}">Favorite Game 2:</label>
+                {{ form.favourite_game_2 }}
+                {% if form.favourite_game_2.errors %}
+                    <span class="error">{{ form.favourite_game_2.errors.0 }}</span>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.favourite_game_3.id_for_label }}">Favorite Game 3:</label>
+                {{ form.favourite_game_3 }}
+                {% if form.favourite_game_3.errors %}
+                    <span class="error">{{ form.favourite_game_3.errors.0 }}</span>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.favourite_game_4.id_for_label }}">Favorite Game 4:</label>
+                {{ form.favourite_game_4 }}
+                {% if form.favourite_game_4.errors %}
+                    <span class="error">{{ form.favourite_game_4.errors.0 }}</span>
+                {% endif %}
+            </div>
+        </div>
+
         <div class="form-actions">
             <button type="submit" class="btn btn-primary">Save Changes</button>
             <a href="{% url 'users:profile' %}" class="btn btn-secondary">Cancel</a>
@@ -84,7 +120,8 @@
 }
 
 .form-group input,
-.form-group textarea {
+.form-group textarea,
+.form-group select {
     width: 100%;
     padding: 0.75rem;
     border: 1px solid #ddd;
@@ -94,10 +131,26 @@
 }
 
 .form-group input:focus,
-.form-group textarea:focus {
+.form-group textarea:focus,
+.form-group select:focus {
     outline: none;
     border-color: #007bff;
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
+}
+
+.games-form-section {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background-color: #fff;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+}
+
+.games-form-section h2 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    color: #333;
+    font-size: 1.25rem;
 }
 
 .error {

@@ -8,7 +8,7 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import TopUpForm, UserRegistrationForm, EmailAuthenticationForm, ProfileEditForm
-from .models import Transaction
+from .models import Profile, Game
 
 RECAPTCHA_VERIFY_URL = "https://www.google.com/recaptcha/api/siteverify"
 
@@ -99,7 +99,6 @@ def top_up_balance(request):
             amount = form.cleaned_data['amount']
             request.user.profile.balance += amount
             request.user.profile.save()
-            Transaction.objects.create(user=request.user, amount=amount)
             messages.success(request, f"Your balance has been successfully updated by ${amount}.")
             return redirect('chipin:home')
     else:

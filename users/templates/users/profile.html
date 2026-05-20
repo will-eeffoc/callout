@@ -17,6 +17,32 @@
         <p><strong>Max Spend per Event:</strong> ${{ profile.max_spend }}</p>
     </div>
 
+    <div class="games-section">
+        <h2>Top 4 Games</h2>
+        <div class="games-list">
+            {% if profile.favourite_game_1 %}
+                <div class="game-item">1. {{ profile.favourite_game_1.title }}</div>
+            {% else %}
+                <div class="game-item empty">1. Not selected</div>
+            {% endif %}
+            {% if profile.favourite_game_2 %}
+                <div class="game-item">2. {{ profile.favourite_game_2.title }}</div>
+            {% else %}
+                <div class="game-item empty">2. Not selected</div>
+            {% endif %}
+            {% if profile.favourite_game_3 %}
+                <div class="game-item">3. {{ profile.favourite_game_3.title }}</div>
+            {% else %}
+                <div class="game-item empty">3. Not selected</div>
+            {% endif %}
+            {% if profile.favourite_game_4 %}
+                <div class="game-item">4. {{ profile.favourite_game_4.title }}</div>
+            {% else %}
+                <div class="game-item empty">4. Not selected</div>
+            {% endif %}
+        </div>
+    </div>
+
     <div class="profile-actions">
         <a href="{% url 'users:edit_profile' %}" class="btn btn-primary">Edit Profile</a>
         <a href="{% url 'chipin:home' %}" class="btn btn-secondary">Back to Home</a>
@@ -42,6 +68,40 @@
     padding: 0.5rem;
     background-color: #fff;
     border-radius: 4px;
+}
+
+.games-section {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background-color: #fff;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+}
+
+.games-section h2 {
+    margin-top: 0;
+    color: #333;
+    font-size: 1.25rem;
+}
+
+.games-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.game-item {
+    padding: 1rem;
+    background-color: #f0f0f0;
+    border-radius: 6px;
+    border-left: 4px solid #007bff;
+    font-weight: 500;
+}
+
+.game-item.empty {
+    color: #999;
+    font-style: italic;
+    border-left-color: #ddd;
 }
 
 .profile-actions {

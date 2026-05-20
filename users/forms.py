@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
-from .models import Profile
+from .models import Profile, Game
 
 class UserRegistrationForm(UserCreationForm):
     email = forms.EmailField(required=True, label="Email")
@@ -67,7 +67,13 @@ class ProfileEditForm(forms.ModelForm):
 
     class Meta:
         model = Profile
-        fields = ['nickname', 'bio', 'max_spend']
+        fields = ['nickname', 'bio', 'max_spend', 'favourite_game_1', 'favourite_game_2', 'favourite_game_3', 'favourite_game_4']
+        widgets = {
+            'favourite_game_1': forms.Select(attrs={'class': 'form-control'}),
+            'favourite_game_2': forms.Select(attrs={'class': 'form-control'}),
+            'favourite_game_3': forms.Select(attrs={'class': 'form-control'}),
+            'favourite_game_4': forms.Select(attrs={'class': 'form-control'}),
+        }
 
     def __init__(self, *args, user=None, **kwargs):
         super().__init__(*args, **kwargs)
