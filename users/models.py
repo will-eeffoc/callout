@@ -28,8 +28,6 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
     nickname = models.CharField(max_length=30, unique=True)
     bio = models.TextField(max_length=500, blank=True)
-    max_spend = models.DecimalField(max_digits=10, decimal_places=2, default=100.00)  # Max spend for each event
-    balance = models.DecimalField(max_digits=10, decimal_places=2, default=100.00)  # User's current balance
     favourite_game_1 = models.ForeignKey(Game, on_delete=models.SET_NULL, null=True, blank=True, related_name="profile_fav_1")
     favourite_game_2 = models.ForeignKey(Game, on_delete=models.SET_NULL, null=True, blank=True, related_name="profile_fav_2")
     favourite_game_3 = models.ForeignKey(Game, on_delete=models.SET_NULL, null=True, blank=True, related_name="profile_fav_3")

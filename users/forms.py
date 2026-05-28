@@ -53,13 +53,6 @@ class EmailAuthenticationForm(AuthenticationForm):
         widget=forms.EmailInput(attrs={"autofocus": True})
     )
 
-class TopUpForm(forms.Form):
-    amount = forms.DecimalField(max_digits=5,decimal_places=2,min_value=0.01,label="Amount to Top Up ($)", 
-            error_messages={
-            'min_value': "Please enter an amount greater than $0.00.",
-            'invalid': "Enter a valid amount in dollars and cents."}
-            )
-
 class ProfileEditForm(forms.ModelForm):
     first_name = forms.CharField(max_length=30, required=True)
     last_name = forms.CharField(max_length=30, required=True)
@@ -67,7 +60,7 @@ class ProfileEditForm(forms.ModelForm):
 
     class Meta:
         model = Profile
-        fields = ['nickname', 'bio', 'max_spend', 'favourite_game_1', 'favourite_game_2', 'favourite_game_3', 'favourite_game_4']
+        fields = ['nickname', 'bio', 'favourite_game_1', 'favourite_game_2', 'favourite_game_3', 'favourite_game_4']
         widgets = {
             'favourite_game_1': forms.Select(attrs={'class': 'form-control'}),
             'favourite_game_2': forms.Select(attrs={'class': 'form-control'}),

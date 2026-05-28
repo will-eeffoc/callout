@@ -1,0 +1,125 @@
+.profile-container {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 2rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.profile-info {
+    margin: 1.5rem 0;
+}
+
+.profile-info p {
+    margin: 0.75rem 0;
+    padding: 0.5rem;
+    background-color: #fff;
+    border-radius: 4px;
+}
+
+.games-section {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background-color: #fff;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+}
+
+.games-section h2 {
+    margin-top: 0;
+    color: #333;
+    font-size: 1.25rem;
+}
+
+.games-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.game-item {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    border-radius: 6px;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+    background-color: #f0f0f0;
+    border: 1px solid #e0e0e0;
+}
+
+.game-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.game-item.empty {
+    cursor: default;
+}
+
+.game-item.empty:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+.game-cover {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.game-cover-placeholder {
+    width: 100%;
+    height: 200px;
+    background-color: #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    font-size: 0.9rem;
+}
+
+.game-item .game-title {
+    padding: 0.75rem;
+    font-weight: 500;
+    text-align: center;
+    background-color: #f0f0f0;
+    color: #333;
+    font-style: italic;
+    border-left-color: #ddd;
+}
+
+.profile-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: bold;
+    text-align: center;
+    display: inline-block;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #545b62;
+}

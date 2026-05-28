@@ -1,6 +1,11 @@
 {% extends 'chipin/base.html' %}
+{% load static %}
 
 {% block title %}Profile - Callout{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'users/css/profile.css' %}">
+{% endblock %}
 
 {% block content %}
 <div class="profile-container">
@@ -13,32 +18,70 @@
         <p><strong>Email:</strong> {{ request.user.email }}</p>
         <p><strong>Nickname:</strong> {{ profile.nickname }}</p>
         <p><strong>Bio:</strong> {{ profile.bio|default:"No bio" }}</p>
-        <p><strong>Balance:</strong> ${{ profile.balance }}</p>
-        <p><strong>Max Spend per Event:</strong> ${{ profile.max_spend }}</p>
     </div>
 
     <div class="games-section">
         <h2>Top 4 Games</h2>
         <div class="games-list">
             {% if profile.favourite_game_1 %}
-                <div class="game-item">1. {{ profile.favourite_game_1.title }}</div>
+                <a href="{% url 'users:game_detail' profile.favourite_game_1.id %}" class="game-item">
+                    {% if profile.favourite_game_1.cover %}
+                        <img src="{{ profile.favourite_game_1.cover.url }}" alt="{{ profile.favourite_game_1.title }} cover" class="game-cover">
+                    {% else %}
+                        <div class="game-cover-placeholder">No cover</div>
+                    {% endif %}
+                    <div class="game-title">{{ profile.favourite_game_1.title }}</div>
+                </a>
             {% else %}
-                <div class="game-item empty">1. Not selected</div>
+                <div class="game-item empty">
+                    <div class="game-cover-placeholder">Not selected</div>
+                    <div class="game-title">1. Not selected</div>
+                </div>
             {% endif %}
             {% if profile.favourite_game_2 %}
-                <div class="game-item">2. {{ profile.favourite_game_2.title }}</div>
+                <a href="{% url 'users:game_detail' profile.favourite_game_2.id %}" class="game-item">
+                    {% if profile.favourite_game_2.cover %}
+                        <img src="{{ profile.favourite_game_2.cover.url }}" alt="{{ profile.favourite_game_2.title }} cover" class="game-cover">
+                    {% else %}
+                        <div class="game-cover-placeholder">No cover</div>
+                    {% endif %}
+                    <div class="game-title">{{ profile.favourite_game_2.title }}</div>
+                </a>
             {% else %}
-                <div class="game-item empty">2. Not selected</div>
+                <div class="game-item empty">
+                    <div class="game-cover-placeholder">Not selected</div>
+                    <div class="game-title">2. Not selected</div>
+                </div>
             {% endif %}
             {% if profile.favourite_game_3 %}
-                <div class="game-item">3. {{ profile.favourite_game_3.title }}</div>
+                <a href="{% url 'users:game_detail' profile.favourite_game_3.id %}" class="game-item">
+                    {% if profile.favourite_game_3.cover %}
+                        <img src="{{ profile.favourite_game_3.cover.url }}" alt="{{ profile.favourite_game_3.title }} cover" class="game-cover">
+                    {% else %}
+                        <div class="game-cover-placeholder">No cover</div>
+                    {% endif %}
+                    <div class="game-title">{{ profile.favourite_game_3.title }}</div>
+                </a>
             {% else %}
-                <div class="game-item empty">3. Not selected</div>
+                <div class="game-item empty">
+                    <div class="game-cover-placeholder">Not selected</div>
+                    <div class="game-title">3. Not selected</div>
+                </div>
             {% endif %}
             {% if profile.favourite_game_4 %}
-                <div class="game-item">4. {{ profile.favourite_game_4.title }}</div>
+                <a href="{% url 'users:game_detail' profile.favourite_game_4.id %}" class="game-item">
+                    {% if profile.favourite_game_4.cover %}
+                        <img src="{{ profile.favourite_game_4.cover.url }}" alt="{{ profile.favourite_game_4.title }} cover" class="game-cover">
+                    {% else %}
+                        <div class="game-cover-placeholder">No cover</div>
+                    {% endif %}
+                    <div class="game-title">{{ profile.favourite_game_4.title }}</div>
+                </a>
             {% else %}
-                <div class="game-item empty">4. Not selected</div>
+                <div class="game-item empty">
+                    <div class="game-cover-placeholder">Not selected</div>
+                    <div class="game-title">4. Not selected</div>
+                </div>
             {% endif %}
         </div>
     </div>
@@ -48,93 +91,4 @@
         <a href="{% url 'chipin:home' %}" class="btn btn-secondary">Back to Home</a>
     </div>
 </div>
-
-<style>
-.profile-container {
-    max-width: 600px;
-    margin: 2rem auto;
-    padding: 2rem;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-}
-
-.profile-info {
-    margin: 1.5rem 0;
-}
-
-.profile-info p {
-    margin: 0.75rem 0;
-    padding: 0.5rem;
-    background-color: #fff;
-    border-radius: 4px;
-}
-
-.games-section {
-    margin: 2rem 0;
-    padding: 1.5rem;
-    background-color: #fff;
-    border-radius: 8px;
-    border: 1px solid #e0e0e0;
-}
-
-.games-section h2 {
-    margin-top: 0;
-    color: #333;
-    font-size: 1.25rem;
-}
-
-.games-list {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-}
-
-.game-item {
-    padding: 1rem;
-    background-color: #f0f0f0;
-    border-radius: 6px;
-    border-left: 4px solid #007bff;
-    font-weight: 500;
-}
-
-.game-item.empty {
-    color: #999;
-    font-style: italic;
-    border-left-color: #ddd;
-}
-
-.profile-actions {
-    display: flex;
-    gap: 1rem;
-    margin-top: 2rem;
-}
-
-.btn {
-    padding: 0.75rem 1.5rem;
-    text-decoration: none;
-    border-radius: 4px;
-    font-weight: bold;
-    text-align: center;
-    display: inline-block;
-}
-
-.btn-primary {
-    background-color: #007bff;
-    color: white;
-}
-
-.btn-primary:hover {
-    background-color: #0056b3;
-}
-
-.btn-secondary {
-    background-color: #6c757d;
-    color: white;
-}
-
-.btn-secondary:hover {
-    background-color: #545b62;
-}
-</style>
 {% endblock %}

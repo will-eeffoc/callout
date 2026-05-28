@@ -48,14 +48,6 @@
             {% endif %}
         </div>
 
-        <div class="form-group">
-            <label for="{{ form.max_spend.id_for_label }}">Max Spend per Event ($):</label>
-            {{ form.max_spend }}
-            {% if form.max_spend.errors %}
-                <span class="error">{{ form.max_spend.errors.0 }}</span>
-            {% endif %}
-        </div>
-
         <div class="games-form-section">
             <h2>Top 4 Games</h2>
             

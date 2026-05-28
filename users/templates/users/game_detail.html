@@ -1,0 +1,36 @@
+{% extends 'chipin/base.html' %}
+{% load static %}
+
+{% block title %}{{ game.title }} - Callout{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'users/css/game_detail.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="game-detail-container">
+    <div class="game-detail-header">
+        <div class="game-cover-section">
+            {% if game.cover %}
+                <img src="{{ game.cover.url }}" alt="{{ game.title }} cover" class="game-cover-image">
+            {% else %}
+                <div class="game-cover-placeholder">No cover art</div>
+            {% endif %}
+        </div>
+        
+        <div class="game-info-section">
+            <h1 class="game-title">{{ game.title }}</h1>
+            
+            <div class="game-description">
+                <h3>About</h3>
+                <p>{{ game.description|default:"No description available" }}</p>
+            </div>
+
+            <div class="game-actions">
+                <a href="{% url 'users:profile' %}" class="btn btn-secondary">Back to Profile</a>
+                <a href="{% url 'chipin:home' %}" class="btn btn-secondary">Back to Home</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
