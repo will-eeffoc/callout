@@ -1,5 +1,6 @@
 from django import forms
 from users.models import Game
+from .models import Review
 
 class GameForm(forms.ModelForm):
     class Meta:
@@ -44,3 +45,20 @@ class GameForm(forms.ModelForm):
         if cover.size > 5 * 1024 * 1024:
             raise forms.ValidationError("Image size must not exceed 5MB.")
         return cover
+
+
+class ReviewForm(forms.ModelForm):
+    class Meta:
+        model = Review
+        fields = ['rating', 'text']
+        widgets = {
+            'rating': forms.RadioSelect(choices=Review.RATING_CHOICES, attrs={
+                'class': 'rating-input'
+            }),
+            'text': forms.Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': 'Share your thoughts about this game...',
+                'rows': 4
+            })
+        }
+

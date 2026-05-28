@@ -9,6 +9,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import UserRegistrationForm, EmailAuthenticationForm, ProfileEditForm
 from .models import Profile, Game
+from chipin.models import Review
+from chipin.forms import ReviewForm
+from django.db.models import Avg
 
 RECAPTCHA_VERIFY_URL = "https://www.google.com/recaptcha/api/siteverify"
 
@@ -116,4 +119,31 @@ def game_detail(request, game_id):
     except Game.DoesNotExist:
         messages.error(request, "Game not found.")
         return redirect('chipin:home')
-    return render(request, 'users/game_detail.html', {'game': game})
+    
+    reviews = game.reviews.all()
+    average_rating = reviews.aggregate(Avg('rating'))['rating__avg']
+    user_review = None
+    
+    if request.user.is_authenticated:
+        user_review = reviews.filter(user=request.user).first()
+    
+    if request.method == 'POST' and request.user.is_authenticated:
+        form = ReviewForm(request.POST, instance=user_review)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.game = game
+            review.user = request.user
+            review.save()
+            messages.success(request, "Your review has been saved!")
+            return redirect('users:game_detail', game_id=game_id)
+    else:
+        form = ReviewForm(instance=user_review) if request.user.is_authenticated else None
+    
+    context = {
+        'game': game,
+        'reviews': reviews,
+        'average_rating': average_rating,
+        'user_review': user_review,
+        'form': form,
+    }
+    return render(request, 'users/game_detail.html', context)
