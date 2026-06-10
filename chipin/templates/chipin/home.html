@@ -28,4 +28,29 @@
     {% else %}
         <p>No reviews yet. <a href="{% url 'chipin:add_game' %}">Add a game</a> to get started!</p>
     {% endif %}
+    
+    <h2>New Games</h2>
+    {% if new_games %}
+        <div class="new-games">
+            {% for game in new_games %}
+                <div class="game-card">
+                    <img src="{{ game.cover.url }}" alt="{{ game.title }}" class="game-card-cover">
+                    <div class="game-card-info">
+                        <h3><a href="{% url 'users:game_detail' game.id %}">{{ game.title }}</a></h3>
+                        {% if game.description %}
+                            <p class="game-description">{{ game.description|truncatewords:15 }}</p>
+                        {% endif %}
+                        {% if game.avg_rating %}
+                            <p class="game-rating">{{ game.avg_rating|floatformat:1 }} ★</p>
+                        {% else %}
+                            <p class="game-no-reviews">No reviews yet, Be the first!</p>
+                        {% endif %}
+                        <p class="game-added">Added {{ game.created_at|date:"M d, Y" }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No games added yet. <a href="{% url 'chipin:add_game' %}">Add a game</a> to get started!</p>
+    {% endif %}
 {% endblock %}

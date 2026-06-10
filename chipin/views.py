@@ -1,7 +1,7 @@
 ﻿from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.db.models import Q
+from django.db.models import Q, Avg
 from .forms import GameForm
 from .models import Review
 from users.models import Game
@@ -9,7 +9,8 @@ from users.models import Game
 @login_required
 def home(request):
     recent_reviews = Review.objects.select_related('game', 'user').all()[:10]
-    return render(request, 'chipin/home.html', {'recent_reviews': recent_reviews})
+    new_games = Game.objects.annotate(avg_rating=Avg('reviews__rating')).order_by('-created_at')[:10]
+    return render(request, 'chipin/home.html', {'recent_reviews': recent_reviews, 'new_games': new_games})
 
 @login_required
 def search_games(request):
