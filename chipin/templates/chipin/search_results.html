@@ -1,0 +1,32 @@
+{% extends 'chipin/base.html' %}
+{% load static %}
+{% block title %}Search Results - Callout{% endblock %}
+{% block content %}
+    <h1>Search Results</h1>
+    {% if query %}
+        <p>Results for "<strong>{{ query }}</strong>"</p>
+    {% endif %}
+    
+    {% if results %}
+        <div class="search-results">
+            {% for game in results %}
+                <div class="game-result-card">
+                    <img src="{{ game.cover.url }}" alt="{{ game.title }}" class="game-result-cover">
+                    <div class="game-result-info">
+                        <h3><a href="{% url 'users:game_detail' game.id %}">{{ game.title }}</a></h3>
+                        {% if game.description %}
+                            <p>{{ game.description|truncatewords:30 }}</p>
+                        {% endif %}
+                        <a href="{% url 'users:game_detail' game.id %}" class="btn btn-primary">View Details</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        {% if query %}
+            <p>No games found matching "<strong>{{ query }}</strong>". Try a different search.</p>
+        {% else %}
+            <p>Enter a search query to find games.</p>
+        {% endif %}
+    {% endif %}
+{% endblock %}

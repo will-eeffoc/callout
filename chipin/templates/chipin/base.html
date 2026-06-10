@@ -11,6 +11,12 @@
         <div class="logo">
             <img src="{% static 'chipin/logo_90.jpg' %}" alt="Callout Logo">
         </div>
+        <div class="search-bar">
+            <form method="get" action="{% url 'chipin:search' %}">
+                <input type="text" name="q" placeholder="Search games..." value="{{ request.GET.q }}">
+                <button type="submit">Search</button>
+            </form>
+        </div>
         <div class="user-info">
             {% if request.user.is_authenticated %}
                 <a href="{% url 'chipin:home' %}">Home</a> <span>{{ request.user.profile.nickname }}</span>
