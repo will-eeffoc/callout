@@ -99,3 +99,91 @@ body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-seri
     .row { margin: .5rem 0; }
     .btn { display: inline-block; padding: .5rem .9rem; border-radius: 8px; text-decoration: none; border: 1px solid #ccc; }
     .btn-primary { border-color: #2b6cb0; }
+
+/* Recently reviewed games styling */
+.recent-reviews {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 1.5rem;
+    margin-top: 2rem;
+    overflow-x: auto;
+    padding-bottom: 1rem;
+    scroll-behavior: smooth;
+}
+
+.review-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 1rem;
+    background-color: #f9f9f9;
+    transition: box-shadow 0.3s ease;
+    flex: 0 0 320px;
+    min-width: 320px;
+}
+
+.review-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.review-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.game-cover-thumb {
+    width: 80px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.review-info {
+    flex: 1;
+}
+
+.review-info h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.25rem;
+}
+
+.review-info h3 a {
+    color: #007BFF;
+    text-decoration: none;
+}
+
+.review-info h3 a:hover {
+    text-decoration: underline;
+}
+
+.reviewer {
+    margin: 0.25rem 0;
+    color: #666;
+    font-size: 0.95rem;
+}
+
+.rating {
+    margin: 0.25rem 0;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #f39c12;
+}
+
+.timestamp {
+    margin: 0.25rem 0;
+    color: #999;
+    font-size: 0.85rem;
+}
+
+.review-text {
+    margin: 0.75rem 0 0 0;
+    padding: 0.75rem;
+    background-color: white;
+    border-left: 3px solid #007BFF;
+    border-radius: 4px;
+    color: #333;
+    line-height: 1.5;
+}

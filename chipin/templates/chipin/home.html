@@ -4,4 +4,28 @@
 {% block content %}
     <h1>Callout</h1>
     <p>Welcome to Callout!</p>
+    
+    <h2>Recently Reviewed Games</h2>
+    {% if recent_reviews %}
+        <div class="recent-reviews">
+            {% for review in recent_reviews %}
+                <div class="review-card">
+                    <div class="review-header">
+                        <img src="{{ review.game.cover.url }}" alt="{{ review.game.title }}" class="game-cover-thumb">
+                        <div class="review-info">
+                            <h3><a href="{% url 'users:game_detail' review.game.id %}">{{ review.game.title }}</a></h3>
+                            <p class="reviewer">Reviewed by <strong>{{ review.user.profile.nickname }}</strong></p>
+                            <p class="rating">{{ review.rating }}</p>
+                            <p class="timestamp">{{ review.created_at|date:"M d, Y" }}</p>
+                        </div>
+                    </div>
+                    {% if review.text %}
+                        <p class="review-text">{{ review.text|truncatewords:30 }}</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No reviews yet. <a href="{% url 'chipin:add_game' %}">Add a game</a> to get started!</p>
+    {% endif %}
 {% endblock %}

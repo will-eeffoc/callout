@@ -2,10 +2,12 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .forms import GameForm
+from .models import Review
 
 @login_required
 def home(request):
-    return render(request, 'chipin/home.html')
+    recent_reviews = Review.objects.select_related('game', 'user').all()[:10]
+    return render(request, 'chipin/home.html', {'recent_reviews': recent_reviews})
 
 @login_required
 def add_game(request):
