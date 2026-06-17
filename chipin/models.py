@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from users.models import Game
 
 class Review(models.Model):
+    # Store game reviews with star ratings (1-5)
     RATING_CHOICES = [
         (1, '★☆☆☆☆'),
         (2, '★★☆☆☆'),
@@ -23,6 +24,7 @@ class Review(models.Model):
         ordering = ['-created_at']
     
     def __str__(self):
+        # Display the review as "username's review of gamename" for easy identification
         return f"{self.user.username}'s review of {self.game.title}"
 
 

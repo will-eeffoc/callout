@@ -4,30 +4,36 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 class Game(models.Model):
+    # Represents a game in the database with title, description, and cover art
     title = models.CharField(max_length=255, unique=True)
     description = models.TextField(blank=True)
     cover = models.ImageField(upload_to='game_covers/', default='game_covers/default.jpg')
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
+        # Display the game by its title
         return self.title
 
 @receiver(post_save, sender=User)
 def ensure_profile(sender, instance: User, created, **kwargs):
     """
-    Always have a Profile. If created and nickname missing, assign a safe unique default.
+    Auto-create a Profile whenever a User is created or if one is missing.
+    Handles edge cases like superusers created via CLI by generating a unique nickname.
     This covers superusers created via createsuperuser and any programmatic user creation.
     """
     profile, made = Profile.objects.get_or_create(user=instance)
     if (made or not profile.nickname):
+        # Try to use username, or fall back to email username, or default to 'user'
         default_base = instance.username or (instance.email.split("@")[0] if instance.email else "user")
         profile.nickname = _unique_nickname(default_base)
         profile.save(update_fields=["nickname"])
 
 class Profile(models.Model):
+    # User profile with bio and up to 4 favorite games
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
     nickname = models.CharField(max_length=30, unique=True)
     bio = models.TextField(max_length=500, blank=True)
+    # Store the user's top 4 favorite games
     favourite_game_1 = models.ForeignKey(Game, on_delete=models.SET_NULL, null=True, blank=True, related_name="profile_fav_1")
     favourite_game_2 = models.ForeignKey(Game, on_delete=models.SET_NULL, null=True, blank=True, related_name="profile_fav_2")
     favourite_game_3 = models.ForeignKey(Game, on_delete=models.SET_NULL, null=True, blank=True, related_name="profile_fav_3")
@@ -38,12 +44,14 @@ class Profile(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
+        # Display the profile by the user's username
         return self.user.username
 
 def _unique_nickname(base: str) -> str:
     """
     Generate a unique nickname from a base string (e.g., username).
     Ensures we never leave nickname null/blank, even for superusers created via CLI.
+    If the base nickname is taken, we append numbers like 'username-2', 'username-3', etc.
     """
     base = (base or "user").strip() or "user"
     candidate = base

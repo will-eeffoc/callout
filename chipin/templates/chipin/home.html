@@ -40,11 +40,6 @@
                         {% if game.description %}
                             <p class="game-description">{{ game.description|truncatewords:15 }}</p>
                         {% endif %}
-                        {% if game.avg_rating %}
-                            <p class="game-rating">{{ game.avg_rating|floatformat:1 }} ★</p>
-                        {% else %}
-                            <p class="game-no-reviews">No reviews yet, Be the first!</p>
-                        {% endif %}
                         <p class="game-added">Added {{ game.created_at|date:"M d, Y" }}</p>
                     </div>
                 </div>

@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from .models import Profile, Game
 
 class UserRegistrationForm(UserCreationForm):
+    # Registration form - collects email, password, name, and nickname to create a new user account
     email = forms.EmailField(required=True, label="Email")
     first_name = forms.CharField(max_length=30, required=True)
     surname = forms.CharField(max_length=30, required=True, label="Last name")
@@ -15,6 +16,7 @@ class UserRegistrationForm(UserCreationForm):
         fields = ['email', 'password1', 'password2', 'first_name']
 
     def clean_email(self):
+        # Validate that the email is unique (we use email as the username too)
         email = self.cleaned_data['email'].strip().lower()
         # since username = email, ensure no existing username/email matches
         if User.objects.filter(username__iexact=email).exists():
@@ -22,6 +24,7 @@ class UserRegistrationForm(UserCreationForm):
         return email
 
     def clean_nickname(self):
+        # Make sure the nickname is not empty and is unique
         nick = self.cleaned_data.get("nickname", "").strip()
         if not nick:
             raise forms.ValidationError("Nickname is required.")
@@ -31,6 +34,7 @@ class UserRegistrationForm(UserCreationForm):
         return nick
 
     def save(self, commit=True):
+        # Save the user with email as username, and create/update their profile with nickname
         user = super().save(commit=False)
         email = self.cleaned_data['email'].strip().lower()
         user.username = email            # username mirrors email
@@ -48,12 +52,14 @@ class UserRegistrationForm(UserCreationForm):
 
 
 class EmailAuthenticationForm(AuthenticationForm):
+    # Login form that uses email instead of username
     username = forms.EmailField(
         label="Email",
         widget=forms.EmailInput(attrs={"autofocus": True})
     )
 
 class ProfileEditForm(forms.ModelForm):
+    # Form for users to edit their profile: name, email, bio, and favorite games
     first_name = forms.CharField(max_length=30, required=True)
     last_name = forms.CharField(max_length=30, required=True)
     email = forms.EmailField(required=True)
@@ -69,6 +75,7 @@ class ProfileEditForm(forms.ModelForm):
         }
 
     def __init__(self, *args, user=None, **kwargs):
+        # Initialize form with current user data for first/last name and email
         super().__init__(*args, **kwargs)
         self.user = user
         if user:
@@ -77,12 +84,14 @@ class ProfileEditForm(forms.ModelForm):
             self.fields['email'].initial = user.email
 
     def clean_email(self):
+        # Check that the new email isn't already taken by another user
         email = self.cleaned_data['email'].strip().lower()
         if self.user and User.objects.filter(username__iexact=email).exclude(pk=self.user.pk).exists():
             raise forms.ValidationError("This email is already in use.")
         return email
 
     def clean_nickname(self):
+        # Ensure nickname isn't empty and is unique to this user
         nickname = self.cleaned_data.get("nickname", "").strip()
         if not nickname:
             raise forms.ValidationError("Nickname is required.")
@@ -91,12 +100,14 @@ class ProfileEditForm(forms.ModelForm):
         return nickname
 
     def save(self, commit=True):
+        # Save changes to profile and user account (name, email, favorite games, bio)
         profile = super().save(commit=False)
         if self.user:
+            # Update user info with form data
             self.user.first_name = self.cleaned_data['first_name']
             self.user.last_name = self.cleaned_data['last_name']
             self.user.email = self.cleaned_data['email'].strip().lower()
-            self.user.username = self.user.email
+            self.user.username = self.user.email  # Keep username in sync with email
             if commit:
                 self.user.save()
         if commit:

@@ -16,16 +16,22 @@ from django.db.models import Avg
 RECAPTCHA_VERIFY_URL = "https://www.google.com/recaptcha/api/siteverify"
 
 def _hp_name(request):
-    # stable per-session honeypot name to defeat autofill/scripts
+    # Generate a unique honeypot field name per session to block bots
+    # Same name stays consistent throughout the session to help with form display
     if "hp_name" not in request.session:
         request.session["hp_name"] = f"hp_{secrets.token_hex(8)}"
     return request.session["hp_name"]
 
 def login_view(request):
+    # Handle user login with multiple security checks:
+    # 1. Honeypot field to catch bots
+    # 2. Timing guard to reject suspiciously fast submissions
+    # 3. reCAPTCHA validation
+    # 4. Finally check username/password
     hp_name = _hp_name(request)
 
     if request.method == "POST":
-        # 1) Honeypot (cheap check first)
+        # 1) Honeypot (cheap check first) - if this field is filled, it's a bot
         if request.POST.get(hp_name):
             messages.error(request, "Bot detected.")
             return redirect("users:login")
@@ -56,7 +62,7 @@ def login_view(request):
             messages.error(request, "reCAPTCHA validation failed. Please try again.")
             return redirect("users:login")
 
-        # 4) Authenticate
+        # 4) Authenticate user with email/password
         username = (request.POST.get("username") or "").strip().lower()
         password = request.POST.get("password") or ""
         user = authenticate(request, username=username, password=password)
@@ -75,6 +81,7 @@ def login_view(request):
     return render(request, "users/login.html", {"hp_name": hp_name, "next": next_url})
 
 def register(request):
+    # Handle user registration - GET shows the form, POST creates a new account
     if request.method == "POST":
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
@@ -87,20 +94,24 @@ def register(request):
 
 @login_required(login_url='users:login')
 def user(request):
+    # This endpoint redirects logged-in users to the home page
     return render(request, "chipin/home.html")
 
 def logout_view(request):
+    # Log the user out and show a success message
     logout(request)
     messages.success(request, "Successfully logged out.")
     return redirect('users:login')
 
 @login_required
 def profile_view(request):
+    # Display the current user's profile
     profile = request.user.profile
     return render(request, 'users/profile.html', {'profile': profile})
 
 @login_required
 def edit_profile(request):
+    # Allow users to edit their profile info: name, nickname, bio, favorite games
     profile = request.user.profile
     if request.method == "POST":
         form = ProfileEditForm(request.POST, instance=profile, user=request.user)
@@ -113,7 +124,7 @@ def edit_profile(request):
     return render(request, 'users/edit_profile.html', {'form': form})
 
 def game_detail(request, game_id):
-    """Display details for a specific game."""
+    # Show game details: description, reviews, average rating, and allow user to submit/edit their own review
     try:
         game = Game.objects.get(id=game_id)
     except Game.DoesNotExist:
@@ -121,12 +132,15 @@ def game_detail(request, game_id):
         return redirect('chipin:home')
     
     reviews = game.reviews.all()
+    # Calculate the average rating across all reviews
     average_rating = reviews.aggregate(Avg('rating'))['rating__avg']
     user_review = None
     
+    # Check if the logged-in user has already reviewed this game
     if request.user.is_authenticated:
         user_review = reviews.filter(user=request.user).first()
     
+    # Handle review submission or update
     if request.method == 'POST' and request.user.is_authenticated:
         form = ReviewForm(request.POST, instance=user_review)
         if form.is_valid():

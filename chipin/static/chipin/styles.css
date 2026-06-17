@@ -97,7 +97,7 @@ header {
     list-style-type: none;
     padding: 0;
     margin: 10px 0;
-    color: red; /* Change this color based on your message type */
+    color: red; 
 }
 
 /* Individual message items */
@@ -114,7 +114,7 @@ header {
     color: green;
 }
 
-/* Basic button styling (for general use) */
+/* Basic button styling */
 button {
     background-color: #28a745;
     color: white;
